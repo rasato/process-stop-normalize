@@ -35,14 +35,11 @@
   <import file="data-source.xml"/>
   <!-- スレッドコンテキスト機能 -->
   <import file="nablarch/batch/threadcontext-for-batch.xml" />
+  <!-- サービス提供可否チェック機能 -->
+  <import file="nablarch/batch/service-availability-for-batch.xml" />
 
   <!-- ファイルパス設置 -->
   <import file="nablarch/batch/filepath-for-batch.xml" />
-  <!-- 処理停止機能 -->
-  <import file="nablarch/common/standalone/process-stop.xml" />
-    <!--
-  <import file="nablarch/common/standalone/process-stop-set-halt.xml" />
-  -->
   <!-- マルチスレッド実行制御機能 -->
   <import file="nablarch/common/standalone/multi-thread.xml" />
   <!-- ループ・トランザクション制御機能 -->
@@ -61,6 +58,12 @@
     <!-- スレッドコンテキスト設定ハンドラ -->
     <component-ref name="threadContextHandler" />
 
+    <!-- convert ServiceUnavailale to success. -->
+    <component class="ch72.net.handler.ServiceUnavailableConvertHandler" />
+
+    <!-- サービス提供可否チェックハンドラ -->
+    <component-ref name="serviceAvailabilityCheckHandler" />
+
     <!-- データベース接続ハンドラ -->
     <component-ref name="dbConnectionManagementHandler" />
 
@@ -76,30 +79,11 @@
     <!-- マルチスレッド実行制御ハンドラ -->
     <component-ref name="multiThreadExecutionHandler" />
 
-    <component class="ch72.net.handler.ProcessStopCatchHandler" />
     <!-- データベース接続ハンドラ -->
     <component-ref name="dbConnectionManagementHandler" />
 
-    <component class="ch72.net.handler.MileStoneHandler" >
-      <property name="message" value="throw dbConnectionManagementHandler"/>
-    </component>
-
     <!-- ループ・トランザクション制御ハンドラ -->
     <component-ref name="loopHandler" />
-    <component class="ch72.net.handler.MileStoneHandler" >
-      <property name="message" value="throw loophander"/>
-    </component>
-
-    <!--
-    <component class="ch72.net.handler.ProcessStopCatchHandler" />
-    -->
-
-    <!--処理停止ハンドラ-->
-    <component-ref name="processStopHandler" />
-
-    <!--
-    <component class="ch72.net.handler.ProcessStopThrowHandler" />
-    -->
 
     <!-- データリードハンドラ -->
     <component-ref name="dataReadHandler" />
@@ -116,8 +100,8 @@
         <component-ref name="codeLoader" />
         <!-- common/code.xml:コードのキャッシュ -->
         <component-ref name="codeCache" />
-        <!-- batch/handler/processStop.xml:処理停止ハンドラ -->
-        <component-ref name="processStopHandler" />
+        <!-- batch/service-availability-for-batch.xml：サービス提供可否チェック -->
+        <component-ref name="serviceAvailability" />
       </list>
     </property>
   </component>
